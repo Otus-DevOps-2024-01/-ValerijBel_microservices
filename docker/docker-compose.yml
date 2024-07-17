@@ -1,38 +1,35 @@
 version: '3.3'
 services:
   post_db:
-    image: mongo:3.2
+    image: mongo:${MONGO_REV}    # 3.6
     volumes:
       - post_db:/data/db
     networks:
       - back_net
-
   ui:
-    build: ../src/ui
-    image: ${USERNAME}/ui:${UI_VERSION}
+    # build: ./ui
+    image: ${USERNAME}/ui:${UI_REV}
     ports:
-      - ${UI_PORT}:9292/tcp
+      - ${APP_PORT}:${APP_PORT}/tcp     # 9292
     networks:
       - front_net
-
   post:
-    build: ../src/post-py
-    image: ${USERNAME}/post:${POST_VERSION}
+    # build: ./post-py
+    image: ${USERNAME}/post:${POST_REV}
     networks:
       - back_net
       - front_net
-
   comment:
-    build: ../src/comment
-    image: ${USERNAME}/comment:${COMMENT_VERSION}
-    expose:
-      - 9292
+    # build: ./comment
+    image: ${USERNAME}/comment:${COMMENT_REV}
     networks:
       - back_net
       - front_net
-
   prometheus:
     image: ${USERNAME}/prometheus
+    networks:
+      - back_net
+      - front_net
     ports:
       - '9090:9090'
     volumes:
@@ -40,13 +37,13 @@ services:
     command: # Передаем доп параметры в командной строке
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention=1d'
+      - '--storage.tsdb.retention=1d' # Задаем время хранения метрик в 1 день
+
+  node-exporter:
+    image: prom/node-exporter:v0.15.2
     networks:
       - back_net
       - front_net
-
-  node-exporter:
-    image: prom/node-exporter:latest
     user: root
     volumes:
       - /proc:/host/proc:ro
@@ -56,9 +53,6 @@ services:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
-    networks:
-      - back_net
-      - front_net
 
 volumes:
   post_db:
