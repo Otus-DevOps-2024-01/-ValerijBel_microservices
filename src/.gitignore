@@ -1,6 +1,0 @@
-build_info.txt
-.env
-prometheus/
-
-## python specific
-*.pyc
