@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   post_db:
-    image: mongo:4.2
+    image: mongo:3.2
     volumes:
       - post_db:/data/db
     networks:
@@ -9,22 +9,22 @@ services:
 
   ui:
     build: ../src/ui
-    image: ${USERNAME}/ui:${UIVERS}
+    image: ${USERNAME}/ui:${UI_VERSION}
     ports:
-      - ${UIPORT}:9292/tcp
+      - ${UI_PORT}:9292/tcp
     networks:
       - front_net
 
   post:
     build: ../src/post-py
-    image: ${USERNAME}/post:1.0
+    image: ${USERNAME}/post:${POST_VERSION}
     networks:
       - back_net
       - front_net
 
   comment:
     build: ../src/comment
-    image: ${USERNAME}/comment:1.0
+    image: ${USERNAME}/comment:${COMMENT_VERSION}
     expose:
       - 9292
     networks:
@@ -42,8 +42,12 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention=1d'
     networks:
-      - back_net
-      - front_net
+      back_net:
+        aliases:
+          - prometheus
+      front_net:
+        aliases:
+          - prometheus
 
   node-exporter:
     image: prom/node-exporter:latest
