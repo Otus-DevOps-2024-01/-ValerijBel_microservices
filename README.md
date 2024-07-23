@@ -31,3 +31,11 @@
 - Добавили мониторинги проекта в Prometheus
 - Выгрузили образы в docker hub
 - Ссылка на docker hub: https://hub.docker.com/u/valerijbel
+
+#HW-018
+- Собрали Fluentd
+- Настроили сбор логов
+- Визуализировали логи в kibana
+- Опробовли дополнительные настроки Fluentd
+- Попробовали Grok шаблоны
+- Собрали Zipkin
