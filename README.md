@@ -42,3 +42,9 @@
 
 #HW-019
 - Установили k8s с помощью kubeadm
+
+#HW-020
+- Установили Minikube
+- Настроили kubectl
+- Развернули Kubernetes в Yandex Cloud
+- Запустили приложение reddit в Kubernetes
